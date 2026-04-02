@@ -1,0 +1,101 @@
+from board import Board
+from player import Player
+from aiplayer import AIPlayer
+from position import Position
+
+
+class Chess:
+    """Gère globalement la partie d'échecs."""
+
+    def __init__(self):
+        self.__board = Board()
+        self.__players = []
+        self.__currentPlayer = None
+
+    def initPlayers(self) -> None:
+        for i in range(2):
+            name = input(f"Nom du joueur {i + 1} : ")
+            color = i  # 0 puis 1
+
+            if name.upper() == "AI":
+                player = AIPlayer(name, color)
+            else:
+                player = Player(name, color)
+
+            self.__players.append(player)
+
+        self.__currentPlayer = self.__players[0]
+
+    def displayBoard(self) -> None:
+        print("\n  a b c d e f g h")
+        for row in range(8, 0, -1):
+            line = str(row) + " "
+            for col in "abcdefgh":
+                piece = self.__board.getPiece(Position(col, row))
+                if piece is None:
+                    line += ". "
+                else:
+                    symbol = str(piece)
+                    if piece.getColor() == 1:
+                        symbol = symbol.lower()
+                    line += symbol + " "
+            print(line)
+        print()
+
+    def isValidMove(self, move: str) -> bool:
+        parts = move.split()
+        if len(parts) != 2:
+            return False
+
+        old_pos_str, new_pos_str = parts
+
+        if len(old_pos_str) != 2 or len(new_pos_str) != 2:
+            return False
+
+        old_position = Position(old_pos_str[0], int(old_pos_str[1]))
+        new_position = Position(new_pos_str[0], int(new_pos_str[1]))
+
+        piece = self.__board.getPiece(old_position)
+
+        if piece is None:
+            return False
+
+        if piece.getColor() != self.__currentPlayer.getColor():
+            return False
+
+        return piece.isValidMove(new_position, self.__board)
+
+    def isCheckMate(self) -> bool:
+        return False
+
+    def updateBoard(self, move: str) -> None:
+        old_pos_str, new_pos_str = move.split()
+        old_position = Position(old_pos_str[0], int(old_pos_str[1]))
+        new_position = Position(new_pos_str[0], int(new_pos_str[1]))
+        self.__board.movePiece(old_position, new_position)
+
+    def switchPlayer(self) -> None:
+        if self.__currentPlayer == self.__players[0]:
+            self.__currentPlayer = self.__players[1]
+        else:
+            self.__currentPlayer = self.__players[0]
+
+    def play(self) -> None:
+        self.initPlayers()
+
+        while not self.isCheckMate():
+            self.displayBoard()
+
+            move = ""
+            while not self.isValidMove(move):
+                print(f"Au tour de {self.__currentPlayer.getName()}")
+                move = self.__currentPlayer.askMove()
+
+            self.updateBoard(move)
+            self.switchPlayer()
+
+
+if __name__ == "__main__":
+    game = Chess()
+    print("Classe Chess créée avec succès.")
+    print("Lance game.play() pour commencer une partie.")

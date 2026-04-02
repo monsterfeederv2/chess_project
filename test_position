@@ -1,0 +1,23 @@
+import unittest
+from position import Position
+
+
+class TestPosition(unittest.TestCase):
+    def test_str(self):
+        p = Position("e", 4)
+        self.assertEqual(str(p), "e4")
+
+    def test_getters(self):
+        p = Position("a", 1)
+        self.assertEqual(p.getColumn(), "a")
+        self.assertEqual(p.getRow(), 1)
+        self.assertEqual(p.getPosition(), "a1")
+
+    def test_equals(self):
+        p1 = Position("b", 2)
+        p2 = Position("b", 2)
+        self.assertEqual(p1, p2)
+
+
+if __name__ == "__main__":
+    unittest.main()

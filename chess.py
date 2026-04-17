@@ -1,7 +1,7 @@
 from board import Board
 from player import Player
 from aiplayer import AIPlayer
-from position import Position
+from Position import Position
 
 
 class Chess:

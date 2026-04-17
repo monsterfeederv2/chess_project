@@ -1,4 +1,5 @@
 from piece import Piece
+from Position import Position
 
 
 class Pawn(Piece):
@@ -12,7 +13,6 @@ class Pawn(Piece):
 
 
 if __name__ == "__main__":
-    from position import Position
 
     pawn = Pawn(Position("a", 2), 0)
     print("Pièce :", pawn)

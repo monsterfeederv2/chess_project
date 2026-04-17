@@ -1,4 +1,6 @@
 from piece import Piece
+from Position import Position
+
 
 
 class Bishop(Piece):
@@ -12,7 +14,6 @@ class Bishop(Piece):
 
 
 if __name__ == "__main__":
-    from position import Position
 
     bishop = Bishop(Position("c", 1), 0)
     print("Pièce :", bishop)

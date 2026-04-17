@@ -1,4 +1,6 @@
 from piece import Piece
+from Position import Position
+
 
 
 class Queen(Piece):
@@ -12,7 +14,6 @@ class Queen(Piece):
 
 
 if __name__ == "__main__":
-    from position import Position
 
     queen = Queen(Position("d", 1), 0)
     print("Pièce :", queen)

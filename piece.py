@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from position import Position
+from Position import Position
 
 
 class Piece(ABC):

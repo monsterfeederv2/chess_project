@@ -1,5 +1,5 @@
 from piece import Piece
-
+from Position import Position
 
 class Knight(Piece):
     """Cavalier."""
@@ -12,7 +12,6 @@ class Knight(Piece):
 
 
 if __name__ == "__main__":
-    from position import Position
 
     knight = Knight(Position("b", 1), 0)
     print("Pièce :", knight)

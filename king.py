@@ -1,4 +1,5 @@
 from piece import Piece
+from  Position import Position
 
 
 class King(Piece):
@@ -12,7 +13,6 @@ class King(Piece):
 
 
 if __name__ == "__main__":
-    from position import Position
 
     king = King(Position("e", 1), 0)
     print("Pièce :", king)

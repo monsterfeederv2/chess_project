@@ -1,4 +1,4 @@
-from position import Position
+from Position import Position
 from king import King
 from queen import Queen
 from bishop import Bishop

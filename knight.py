@@ -5,7 +5,7 @@ class Knight(Piece):
     """Cavalier."""
 
     def isValidMove(self, newPosition, board) -> bool:
-        return True 
+        return True
 
     def __str__(self) -> str:
         return "N"

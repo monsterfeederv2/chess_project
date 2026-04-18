@@ -17,3 +17,4 @@ if __name__ == "__main__":
     print("Pièce :", knight)
     print("Position :", knight.getPosition())
     print("Test Knight OK !")
+      

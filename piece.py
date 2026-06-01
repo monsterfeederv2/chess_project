@@ -18,6 +18,16 @@ class Piece(ABC):
     def getColor(self) -> int:
         return self.__color
 
+    def _sameSquare(self, newPosition: Position) -> bool:
+        return self.__position == newPosition
+
+    def _canMoveTo(self, newPosition: Position, board) -> bool:
+        if not newPosition.isValid() or self._sameSquare(newPosition):
+            return False
+
+        target = board.getPiece(newPosition)
+        return target is None or target.getColor() != self.__color
+
     @abstractmethod
     def isValidMove(self, newPosition: Position, board) -> bool:
         """Retourne True si le déplacement est valide."""

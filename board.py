@@ -10,6 +10,15 @@ from pawn import Pawn
 class Board:
     """Représente l'échiquier."""
 
+    PIECE_TYPES = {
+        "K": King,
+        "Q": Queen,
+        "B": Bishop,
+        "N": Knight,
+        "R": Rook,
+        "P": Pawn,
+    }
+
     def __init__(self):
         self.__pieces = []
         self.__initPieces()
@@ -55,6 +64,60 @@ class Board:
 
     def getPieces(self):
         return self.__pieces
+
+    def clear(self) -> None:
+        self.__pieces = []
+
+    def addPiece(self, piece) -> None:
+        self.__pieces.append(piece)
+
+    def isPathClear(self, old_position: Position, new_position: Position) -> bool:
+        old_col = old_position.getColumn()
+        old_row = old_position.getRow()
+        new_col = new_position.getColumn()
+        new_row = new_position.getRow()
+
+        col_step = 0
+        row_step = 0
+
+        if old_col != new_col:
+            col_step = 1 if new_col > old_col else -1
+        if old_row != new_row:
+            row_step = 1 if new_row > old_row else -1
+
+        columns = Position.COLUMNS
+        col_index = columns.index(old_col)
+        row = old_row
+
+        while True:
+            col_index += col_step
+            row += row_step
+            current = Position(columns[col_index], row)
+
+            if current == new_position:
+                return True
+
+            if self.getPiece(current) is not None:
+                return False
+
+    def toData(self) -> list[dict]:
+        data = []
+        for piece in self.__pieces:
+            data.append({
+                "type": str(piece),
+                "color": piece.getColor(),
+                "position": piece.getPosition().getPosition(),
+            })
+        return data
+
+    def loadData(self, pieces_data: list[dict]) -> None:
+        self.clear()
+        for item in pieces_data:
+            piece_type = item["type"].upper()
+            position_text = item["position"]
+            position = Position(position_text[0], int(position_text[1]))
+            piece_class = self.PIECE_TYPES[piece_type]
+            self.addPiece(piece_class(position, int(item["color"])))
 
     def movePiece(self, old_position: Position, new_position: Position) -> bool:
         piece = self.getPiece(old_position)

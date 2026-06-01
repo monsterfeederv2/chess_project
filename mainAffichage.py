@@ -3,8 +3,7 @@ from Position import Position
 
 
 def display_board_pretty(game):
-    # accès au board (hack nécessaire sans modifier Chess)
-    board = game._Chess__board
+    board = game.getBoard()
 
     symbols = {
         "K": "♔", "Q": "♕", "R": "♖",
@@ -35,16 +34,31 @@ def main():
     game = Chess()
     game.initPlayers()
 
-    while True:
+    while not game.isCheckMate():
         display_board_pretty(game)
 
         move = ""
         while not game.isValidMove(move):
-            print(f"Au tour de {game._Chess__currentPlayer.getName()}")
-            move = game._Chess__currentPlayer.askMove()
+            current_player = game.getCurrentPlayer()
+            print(f"Au tour de {current_player.getName()}")
+            move = current_player.askMove(board=game.getBoard()) if hasattr(current_player, "askMove") and current_player.__class__.__name__ == "AIPlayer" else current_player.askMove()
+
+            if move.lower() == "save":
+                game.saveGame()
+                print("Partie sauvegardée.")
+                move = ""
+            elif move.lower() == "load":
+                game.loadGame()
+                print("Partie restaurée.")
+                move = ""
+            elif move.lower() == "quit":
+                print("Partie terminée.")
+                return
 
         game.updateBoard(move)
         game.switchPlayer()
+
+    print(f"Échec et mat ! {game.getCurrentPlayer().getName()} a perdu.")
 
 
 if __name__ == "__main__":

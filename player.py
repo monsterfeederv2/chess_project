@@ -12,7 +12,7 @@ class Player:
         return self.__color
 
     def askMove(self) -> str:
-        return input(f"{self.__name}, entrez votre coup : ")
+        return input(f"{self.__name}, entrez votre coup (ex: Nb1 Nc3, save, load, quit) : ")
 
     def __str__(self) -> str:
         return self.__name

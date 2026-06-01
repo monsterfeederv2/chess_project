@@ -1,8 +1,11 @@
 class Position:
     """Représente une position sur l'échiquier, par exemple e4."""
 
+    COLUMNS = "abcdefgh"
+    ROWS = range(1, 9)
+
     def __init__(self, column: str, row: int):
-        self.__column = column
+        self.__column = column.lower()
         self.__row = row
 
     def getColumn(self) -> str:
@@ -13,6 +16,9 @@ class Position:
 
     def getPosition(self) -> str:
         return f"{self.__column}{self.__row}"
+
+    def isValid(self) -> bool:
+        return self.__column in self.COLUMNS and self.__row in self.ROWS
 
     def __str__(self) -> str:
         return self.getPosition()

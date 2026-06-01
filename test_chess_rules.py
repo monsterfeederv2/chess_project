@@ -5,7 +5,6 @@ import unittest
 from Position import Position
 from board import Board
 from chess import Chess
-from player import Player
 
 
 class TestChessRules(unittest.TestCase):
@@ -36,15 +35,13 @@ class TestChessRules(unittest.TestCase):
 
     def test_chess_accepts_subject_move_format(self):
         game = Chess()
-        game._Chess__players = [Player("Blanc", 0), Player("Noir", 1)]
-        game._Chess__currentPlayer = game._Chess__players[0]
+        game.setPlayers(["Blanc", "Noir"])
         self.assertTrue(game.isValidMove("Nb1 Nc3"))
         self.assertFalse(game.isValidMove("Rb1 Rc3"))
 
     def test_save_and_load_game(self):
         game = Chess()
-        game._Chess__players = [Player("Blanc", 0), Player("Noir", 1)]
-        game._Chess__currentPlayer = game._Chess__players[0]
+        game.setPlayers(["Blanc", "Noir"])
         game.updateBoard("Pe2 Pe4")
 
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:

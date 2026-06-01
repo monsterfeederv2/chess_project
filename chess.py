@@ -17,18 +17,25 @@ class Chess:
         self.__players = []
         self.__currentPlayer = None
 
+    def __createPlayer(self, name: str, color: int) -> Player:
+        if name.upper() == "AI":
+            return AIPlayer(name, color)
+        return Player(name, color)
+
     def initPlayers(self) -> None:
+        names = []
         for i in range(2):
-            name = input(f"Nom du joueur {i + 1} : ")
-            color = i  # 0 puis 1
+            names.append(input(f"Nom du joueur {i + 1} : "))
 
-            if name.upper() == "AI":
-                player = AIPlayer(name, color)
-            else:
-                player = Player(name, color)
+        self.setPlayers(names)
 
-            self.__players.append(player)
+    def setPlayers(self, names: list[str]) -> None:
+        if len(names) != 2:
+            raise ValueError("Une partie d'échecs doit avoir exactement deux joueurs.")
 
+        self.__players = []
+        for color, name in enumerate(names):
+            self.__players.append(self.__createPlayer(name, color))
         self.__currentPlayer = self.__players[0]
 
     def getBoard(self) -> Board:
@@ -173,6 +180,30 @@ class Chess:
         else:
             self.__currentPlayer = self.__players[0]
 
+    def __askCurrentPlayerMove(self) -> str:
+        if isinstance(self.__currentPlayer, AIPlayer):
+            return self.__currentPlayer.askMove(self.__board)
+        return self.__currentPlayer.askMove()
+
+    def __handleCommand(self, move: str) -> bool:
+        command = move.lower()
+
+        if command == "save":
+            self.saveGame()
+            print("Partie sauvegardée.")
+            return True
+
+        if command == "load":
+            self.loadGame()
+            print("Partie restaurée.")
+            return True
+
+        if command == "quit":
+            print("Partie terminée.")
+            return True
+
+        return False
+
     def saveGame(self, filename: str = SAVE_FILE) -> None:
         data = {
             "current_player_color": self.__currentPlayer.getColor(),
@@ -199,31 +230,24 @@ class Chess:
         current_color = data["current_player_color"]
         self.__currentPlayer = next(player for player in self.__players if player.getColor() == current_color)
 
-    def play(self) -> None:
+    def play(self, display_function=None) -> None:
         self.initPlayers()
 
         while not self.isCheckMate():
-            self.displayBoard()
+            if display_function is None:
+                self.displayBoard()
+            else:
+                display_function(self)
 
             move = ""
             while not self.isValidMove(move):
                 print(f"Au tour de {self.__currentPlayer.getName()}")
-                if isinstance(self.__currentPlayer, AIPlayer):
-                    move = self.__currentPlayer.askMove(self.__board)
-                else:
-                    move = self.__currentPlayer.askMove()
+                move = self.__askCurrentPlayerMove()
 
-                if move.lower() == "save":
-                    self.saveGame()
-                    print("Partie sauvegardée.")
+                if self.__handleCommand(move):
+                    if move.lower() == "quit":
+                        return
                     move = ""
-                elif move.lower() == "load":
-                    self.loadGame()
-                    print("Partie restaurée.")
-                    move = ""
-                elif move.lower() == "quit":
-                    print("Partie terminée.")
-                    return
 
             self.updateBoard(move)
             self.switchPlayer()

@@ -6,8 +6,10 @@ def display_board_pretty(game):
     board = game.getBoard()
 
     symbols = {
-        "K": "♔", "Q": "♕", "R": "♖",
-        "B": "♗", "N": "♘", "P": "♙"
+        (0, "K"): "♔", (0, "Q"): "♕", (0, "R"): "♖",
+        (0, "B"): "♗", (0, "N"): "♘", (0, "P"): "♙",
+        (1, "K"): "♚", (1, "Q"): "♛", (1, "R"): "♜",
+        (1, "B"): "♝", (1, "N"): "♞", (1, "P"): "♟",
     }
 
     print("\n   a  b  c  d  e  f  g  h")
@@ -19,12 +21,7 @@ def display_board_pretty(game):
             if piece is None:
                 line += " . "
             else:
-                symbol = symbols.get(str(piece).upper(), "?")
-
-                # pièces noires en minuscule
-                if piece.getColor() == 1:
-                    symbol = symbol.lower()
-
+                symbol = symbols.get((piece.getColor(), str(piece).upper()), "?")
                 line += f" {symbol} "
         print(line)
     print()
@@ -32,33 +29,7 @@ def display_board_pretty(game):
 
 def main():
     game = Chess()
-    game.initPlayers()
-
-    while not game.isCheckMate():
-        display_board_pretty(game)
-
-        move = ""
-        while not game.isValidMove(move):
-            current_player = game.getCurrentPlayer()
-            print(f"Au tour de {current_player.getName()}")
-            move = current_player.askMove(board=game.getBoard()) if hasattr(current_player, "askMove") and current_player.__class__.__name__ == "AIPlayer" else current_player.askMove()
-
-            if move.lower() == "save":
-                game.saveGame()
-                print("Partie sauvegardée.")
-                move = ""
-            elif move.lower() == "load":
-                game.loadGame()
-                print("Partie restaurée.")
-                move = ""
-            elif move.lower() == "quit":
-                print("Partie terminée.")
-                return
-
-        game.updateBoard(move)
-        game.switchPlayer()
-
-    print(f"Échec et mat ! {game.getCurrentPlayer().getName()} a perdu.")
+    game.play(display_board_pretty)
 
 
 if __name__ == "__main__":
